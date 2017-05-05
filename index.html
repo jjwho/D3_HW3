@@ -27,20 +27,147 @@
                   "y": 13+20*(i),
                   "font-size": "12",
                   "font-family": "微軟正黑體"
-              }).text(fDataSet[i].industry);
+              }).text(fDataSet[i].industry)
                
                svg.append("rect").attr({
                    "x": 200,
                    "y": 0+20*i,
                    "width": fDataSet[i].amount/100000000,
-                   "height": 16
+                   "height": 16,
                    "fill": "red"
                })
            }
        });
    </script>
    
+   <br><hr><br>
+   2. 數字小於70改為紅色
+   <br><br>
+     <script>
+        var arr = [85, 60, 99, 49, 77, 82];
 
+        bind();
+        render();
+        
+
+
+       function bind(){
+         var selection = d3.select("body")
+                        .selectAll("div")
+                        .data(arr);  
+           selection.enter().append("div");
+           selection.exit().remove();
+       }
+       
+       function render(){
+           d3.selectAll("div")
+               .style({
+                color: function(d){
+                        if(d<70){return "red";} 
+                        else {return "black";}
+                    }
+                })
+               .text(function(d,i){
+               return (i+1)+":"+d;
+           });
+       }
+    </script>
+   <p></p>
+   <br><br><hr>
+   <br>
+   3. 建立簡單動態圖表
+   <br><br>
    
+    <script>
+        var arr2 = [85, 60, 99, 49, 77, 82];
+        var w=800, h=300, p=100;
+
+        svg();
+        bind();
+        render();
+           
+       
+       // console.log(d3.selectAll("div") );
+
+       function svg(){
+           d3.select("body").append("svg").attr({
+               "id": "aa",
+               "width": w,
+               "height": h
+           });
+       }
+       
+       function bind(){
+        //rect
+         var selection = d3.select("svg#aa")
+                        .selectAll("rect")
+                        .data(arr2);  
+           selection.enter().append("rect");
+           selection.exit().remove();
+           
+        //text
+        var selection = d3.select("svg#aa")
+                        .selectAll("text")
+                        .data(arr2);  
+           selection.enter().append("text");
+           selection.exit().remove();
+       }
+       
+       
+       
+       function render(){
+           d3.select("svg#aa").selectAll("rect")
+             .attr({
+                 x: function(d,i){
+                     return p+(40+2)*i;
+                    },
+                 y:function(d,i){
+                     return h-p-d;
+                    },
+                 width: 40,
+                 height: function(d,i){
+                     return d;
+                    },
+                fill:  function(d,i){
+                    if(d<70){return "red";}
+                    else{return "lightgreen";}
+                }
+             });
+           
+           d3.select("svg#aa").selectAll("text")
+             .attr({
+                 x: function(d,i){
+                     return p+12+(40+2)*i;
+                    },
+                 y:function(d,i){
+                     return h-p+20;
+                    }
+            
+             }).text(function(d){return d;});
+           
+            }
+       
+       
+           var random = function(N,M){
+                        return Math.floor(Math.random()*(M-N+1)+N);
+                        }
+       
+           function update(){
+               var num = random(10,100);
+               arr2.push(num);
+               bind();
+               render();
+           }
+           
+             function update_remove(){
+               arr2.shift();
+               bind();
+               render();
+           }
+      
+    </script>
+
+    <input type="button" value="新增" onclick="update()">
+    <input type="button" value="移除" onclick="update_remove()">
 </body>
 </html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>d3-start</title>
+    <script src="https://d3js.org/d3.v3.js"></script>
+</head>
+<body>
+ 
+ <br>
+     1. 2016年8月且台北市且發票數量大於10億張的項目
+ <br><br>
+  <svg width="900" height="300">
+      
+  </svg>
+   
+   <script>
+       d3.json("invoice-taipei.json", function(dataSet){
+           var svg = d3.select("svg");
+           var fDataSet = dataSet.filter(function(d){
+               return d.amount>1000000000 && d.date==="2016/8/1" && d.cid==="A";
+           })
+           for(var i=0; i<fDataSet.length; i++){
+              svg.append("text")
+                  .attr({
+                  "x": 10,
+                  "y": 13+20*(i),
+                  "font-size": "12",
+                  "font-family": "微軟正黑體"
+              }).text(fDataSet[i].industry);
+               
+               svg.append("rect").attr({
+                   "x": 200,
+                   "y": 0+20*i,
+                   "width": fDataSet[i].amount/100000000,
+                   "height": 16
+                   "fill": "red"
+               })
+           }
+       });
+   </script>
+   
+
+   
+</body>
+</html>
